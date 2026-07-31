@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BallThrower : MonoBehaviour
 {
+    public event Action BallThrown;
+
+    [Header("Throw Settings")]
     [SerializeField] private float forceMultiplier = 10f;
 
     private Rigidbody rb;
@@ -21,5 +25,7 @@ public class BallThrower : MonoBehaviour
 
         Vector3 force = direction.normalized * power * forceMultiplier;
         rb.AddForce(force, ForceMode.VelocityChange);
+
+        BallThrown?.Invoke();
     }
 }

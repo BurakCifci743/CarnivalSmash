@@ -4,7 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class BallThrowInput : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private BallThrower ballThrower;
+    [SerializeField] private RoundController roundController;
+
+    [Header("Throw Test Settings")]
     [SerializeField] private float throwPower = 1f;
 
     private void Update()
@@ -13,6 +17,8 @@ public class BallThrowInput : MonoBehaviour
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
+            if (!roundController.CanThrow) return;
+
             ballThrower.Throw(Vector3.forward + Vector3.up * 0.55f, throwPower);
         }
 
