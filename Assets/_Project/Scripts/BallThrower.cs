@@ -7,7 +7,9 @@ public class BallThrower : MonoBehaviour
     public event Action BallThrown;
 
     [Header("Throw Settings")]
-    [SerializeField] private float forceMultiplier = 10f;
+    [SerializeField] private float launchSpeed = 16f;
+
+    public float LaunchSpeed => launchSpeed;
 
     private Rigidbody rb;
     private bool hasThrown;
@@ -17,14 +19,13 @@ public class BallThrower : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    public void Throw(Vector3 direction, float power)
+    public void Throw(Vector3 launchVelocity)
     {
         if (hasThrown) return;
 
         hasThrown = true;
 
-        Vector3 force = direction.normalized * power * forceMultiplier;
-        rb.AddForce(force, ForceMode.VelocityChange);
+        rb.AddForce(launchVelocity, ForceMode.VelocityChange);
 
         BallThrown?.Invoke();
     }
