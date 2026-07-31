@@ -13,7 +13,7 @@ public class BallThrowInput : MonoBehaviour
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            ballThrower.Throw(Vector3.forward + Vector3.up * 0.8f, throwPower);
+            ballThrower.Throw(Vector3.forward + Vector3.up * 0.55f, throwPower);
         }
 
         if (Keyboard.current.rKey.wasPressedThisFrame)

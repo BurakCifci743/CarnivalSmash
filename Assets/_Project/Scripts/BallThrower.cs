@@ -20,6 +20,6 @@ public class BallThrower : MonoBehaviour
         hasThrown = true;
 
         Vector3 force = direction.normalized * power * forceMultiplier;
-        rb.AddForce(force, ForceMode.Impulse);
+        rb.AddForce(force, ForceMode.VelocityChange);
     }
 }
