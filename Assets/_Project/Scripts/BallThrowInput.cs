@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -6,7 +7,7 @@ public class BallThrowInput : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private BallThrower ballThrower;
-    [SerializeField] private RoundController roundController;
+    [SerializeField] private GameStateMachine gameStateMachine;
     [SerializeField] private Camera mainCamera;
 
     [Header("Tap Aim Settings")]
@@ -28,8 +29,13 @@ public class BallThrowInput : MonoBehaviour
 
     private void HandleTapToThrow()
     {
-        if (!roundController.CanThrow) return;
+        if (!gameStateMachine.CanAcceptThrow) return;
         if (Pointer.current == null) return;
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
 
         if (!Pointer.current.press.wasPressedThisFrame) return;
 
@@ -47,6 +53,7 @@ public class BallThrowInput : MonoBehaviour
                 $"Aim Target: {rawTargetPoint:F3} | Corrected Target: {correctedTargetPoint:F3} | Hit Object: {hit.collider.name}"
             );
         }
+
         if (debugTargetMarker != null)
         {
             debugTargetMarker.position = rawTargetPoint;
