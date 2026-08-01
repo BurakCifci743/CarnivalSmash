@@ -18,9 +18,9 @@ public class RoundResultView : MonoBehaviour
     }
 
     private void Start()
-    {
-        resultText.text = "Ready";
-    }
+{
+    resultText.text = "Tap a can to throw";
+}
 
     private void UpdateResultText(int knockedCount, int totalCount)
     {

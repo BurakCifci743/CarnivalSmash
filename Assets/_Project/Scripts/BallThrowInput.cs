@@ -11,7 +11,14 @@ public class BallThrowInput : MonoBehaviour
 
     [Header("Tap Aim Settings")]
     [SerializeField] private float maxRayDistance = 100f;
-    [SerializeField] private float minFlightTime = 0.25f;
+    [SerializeField] private float minFlightTime = 0.30f;
+
+    [Header("Aim Correction")]
+    [SerializeField] private float verticalAimOffset = 0.10f;
+
+    [Header("Debug")]
+    [SerializeField] private Transform debugTargetMarker;
+    [SerializeField] private bool logAimDebug;
 
     private void Update()
     {
@@ -31,39 +38,22 @@ public class BallThrowInput : MonoBehaviour
 
         if (!Physics.Raycast(ray, out RaycastHit hit, maxRayDistance)) return;
 
-        Vector3 targetPoint = hit.point;
-        Vector3 ballPosition = ballThrower.transform.position;
+        Vector3 rawTargetPoint = hit.point;
+        Vector3 correctedTargetPoint = rawTargetPoint + Vector3.up * verticalAimOffset;
 
-        Vector3 launchVelocity = CalculateLaunchVelocity(ballPosition, targetPoint);
-
-        ballThrower.Throw(launchVelocity);
-    }
-
-    private Vector3 CalculateLaunchVelocity(Vector3 startPoint, Vector3 targetPoint)
-    {
-        Vector3 displacement = targetPoint - startPoint;
-
-        Vector3 horizontalDisplacement = new Vector3(
-            displacement.x,
-            0f,
-            displacement.z
-        );
-
-        if (horizontalDisplacement.sqrMagnitude <= 0.001f)
+        if (logAimDebug)
         {
-            return Vector3.zero;
+            Debug.Log(
+                $"Aim Target: {rawTargetPoint:F3} | Corrected Target: {correctedTargetPoint:F3} | Hit Object: {hit.collider.name}"
+            );
+        }
+        if (debugTargetMarker != null)
+        {
+            debugTargetMarker.position = rawTargetPoint;
+            debugTargetMarker.gameObject.SetActive(true);
         }
 
-        float horizontalSpeed = ballThrower.LaunchSpeed;
-        float flightTime = horizontalDisplacement.magnitude / horizontalSpeed;
-        flightTime = Mathf.Max(flightTime, minFlightTime);
-
-        Vector3 horizontalVelocity = horizontalDisplacement.normalized * horizontalSpeed;
-
-        float verticalVelocity =
-            (displacement.y - 0.5f * Physics.gravity.y * flightTime * flightTime) / flightTime;
-
-        return horizontalVelocity + Vector3.up * verticalVelocity;
+        ballThrower.ThrowAtTarget(correctedTargetPoint, minFlightTime);
     }
 
     private void HandleDebugReset()
