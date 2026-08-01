@@ -1,20 +1,42 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BallImpactReporter : MonoBehaviour
 {
+    public event Action<float> BallImpacted;
+
     [Header("References")]
     [SerializeField] private BallThrower ballThrower;
 
+    [Header("Impact Settings")]
+    [SerializeField] private float minImpactSpeed = 2f;
+    [SerializeField] private bool reportOnlyFirstImpact = true;
+
     [Header("Debug")]
     [SerializeField] private bool logImpactDebug;
-    [SerializeField] private bool logOnlyFirstImpact = true;
+
     private Rigidbody rb;
-    private bool hasLoggedImpact;
+    private bool hasReportedImpact;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void OnEnable()
+    {
+        ballThrower.BallThrown += ResetImpactReport;
+    }
+
+    private void OnDisable()
+    {
+        ballThrower.BallThrown -= ResetImpactReport;
+    }
+
+    private void ResetImpactReport()
+    {
+        hasReportedImpact = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -22,16 +44,21 @@ public class BallImpactReporter : MonoBehaviour
         if (ballThrower == null) return;
         if (!ballThrower.HasThrown) return;
 
-        if (logOnlyFirstImpact && hasLoggedImpact) return;
+        float impactSpeed = rb.linearVelocity.magnitude;
 
-       hasLoggedImpact = true;
+        if (impactSpeed < minImpactSpeed) return;
+        if (reportOnlyFirstImpact && hasReportedImpact) return;
 
-if (!logImpactDebug) return;
+        hasReportedImpact = true;
 
-ContactPoint contact = collision.GetContact(0);
+        BallImpacted?.Invoke(impactSpeed);
 
-Debug.Log(
-    $"Ball Impact: {contact.point:F3} | Hit Object: {collision.collider.name} | Velocity: {rb.linearVelocity:F3}"
-);
+        if (!logImpactDebug) return;
+
+        ContactPoint contact = collision.GetContact(0);
+
+        Debug.Log(
+            $"Ball Impact: {contact.point:F3} | Hit Object: {collision.collider.name} | Velocity: {rb.linearVelocity:F3} | Speed: {impactSpeed:F2}"
+        );
     }
 }
