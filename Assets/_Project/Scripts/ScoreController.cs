@@ -23,11 +23,14 @@ public class ScoreController : MonoBehaviour
         roundController.RoundCompleted -= HandleRoundCompleted;
     }
 
+    public int CalculateScore(int knockedCount)
+    {
+        return knockedCount * scorePerCan;
+    }
+
     private void HandleRoundCompleted(int knockedCount, int totalCount)
     {
-        CurrentScore = knockedCount * scorePerCan;
-
-        Debug.Log($"Score: {CurrentScore}");
+        CurrentScore = CalculateScore(knockedCount);
 
         ScoreChanged?.Invoke(CurrentScore);
     }
