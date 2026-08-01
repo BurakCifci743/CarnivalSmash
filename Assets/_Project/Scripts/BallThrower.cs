@@ -12,11 +12,16 @@ public class BallThrower : MonoBehaviour
     public bool HasThrown => hasThrown;
 
     private Rigidbody rb;
+    private Vector3 startPosition;
+    private Quaternion startRotation;
     private bool hasThrown;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 
     public bool ThrowAtTarget(Vector3 targetPoint, float minFlightTime)
@@ -28,6 +33,7 @@ public class BallThrower : MonoBehaviour
         if (launchVelocity.sqrMagnitude <= 0.001f) return false;
 
         hasThrown = true;
+        rb.WakeUp();
 
         rb.AddForce(launchVelocity, ForceMode.VelocityChange);
 
@@ -35,6 +41,21 @@ public class BallThrower : MonoBehaviour
 
         return true;
     }
+
+    public void ResetBall()
+{
+    hasThrown = false;
+
+    rb.linearVelocity = Vector3.zero;
+    rb.angularVelocity = Vector3.zero;
+
+    rb.position = startPosition;
+    rb.rotation = startRotation;
+
+    transform.SetPositionAndRotation(startPosition, startRotation);
+
+    rb.Sleep();
+}
 
     private Vector3 CalculateLaunchVelocity(Vector3 startPoint, Vector3 targetPoint, float minFlightTime)
     {

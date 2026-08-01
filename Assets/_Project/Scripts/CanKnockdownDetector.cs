@@ -6,14 +6,13 @@ public class CanKnockdownDetector : MonoBehaviour
     [SerializeField] private float knockdownAngle = 45f;
 
     public bool IsKnockedDown { get; private set; }
+    public float CurrentAngleFromUp => Vector3.Angle(transform.up, Vector3.up);
 
     private void Update()
     {
         if (IsKnockedDown) return;
 
-        float angleFromUp = Vector3.Angle(transform.up, Vector3.up);
-
-        if (angleFromUp >= knockdownAngle)
+        if (CurrentAngleFromUp >= knockdownAngle)
         {
             IsKnockedDown = true;
         }

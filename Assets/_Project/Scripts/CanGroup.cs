@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 public class CanGroup : MonoBehaviour
@@ -27,5 +28,20 @@ public class CanGroup : MonoBehaviour
     public int GetTotalCanCount()
     {
         return cans.Length;
+    }
+
+    public string GetStandingCanReport()
+    {
+        StringBuilder builder = new StringBuilder();
+
+        foreach (CanKnockdownDetector can in cans)
+        {
+            if (!can.IsKnockedDown)
+            {
+                builder.AppendLine($"{can.name} | Angle: {can.CurrentAngleFromUp:F1}");
+            }
+        }
+
+        return builder.ToString();
     }
 }
