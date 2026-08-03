@@ -6,7 +6,7 @@ public class ResultPanelView : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameStateMachine gameStateMachine;
     [SerializeField] private BallThrower ballThrower;
-    [SerializeField] private ScoreController scoreController;
+    [SerializeField] private LocalLeaderboardController localLeaderboardController;
     [SerializeField] private GameObject gameplayHud;
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private TMP_Text instructionText;
@@ -19,16 +19,16 @@ public class ResultPanelView : MonoBehaviour
 
     private void OnEnable()
     {
-        gameStateMachine.GameEnded += HandleGameEnded;
         gameStateMachine.AttemptChanged += UpdateAttemptText;
         ballThrower.BallThrown += HideInstruction;
+        localLeaderboardController.LeaderboardUpdated += HandleLeaderboardUpdated;
     }
 
     private void OnDisable()
     {
-        gameStateMachine.GameEnded -= HandleGameEnded;
         gameStateMachine.AttemptChanged -= UpdateAttemptText;
         ballThrower.BallThrown -= HideInstruction;
+        localLeaderboardController.LeaderboardUpdated -= HandleLeaderboardUpdated;
     }
 
     private void Start()
@@ -52,26 +52,18 @@ public class ResultPanelView : MonoBehaviour
         attemptText.text = $"Attempt: {currentAttempt} / {maxAttempts}";
     }
 
-   private void HandleGameEnded(int knockedCount, int totalCount)
-{
-    gameplayHud.SetActive(false);
+    private void HandleLeaderboardUpdated(GameResult result, int bestScore, bool isNewBest)
+    {
+        gameplayHud.SetActive(false);
 
-    int attemptsUsed = gameStateMachine.CurrentAttempt;
-    int finalScore = scoreController.CalculateFinalScore(
-        knockedCount,
-        attemptsUsed,
-        gameStateMachine.MaxAttempts
-    );
+        resultTitleText.text = result.IsPerfect ? "Perfect Smash!" : "Game Over";
 
-    bool allCansKnocked = knockedCount >= totalCount;
+        resultDetailText.text =
+            $"Score: {result.FinalScore}\n" +
+            $"Best: {bestScore}" + (isNewBest ? "  NEW!" : "") + "\n" +
+            $"Cans: {result.KnockedCount} / {result.TotalCount}\n" +
+            $"Attempts: {result.AttemptsUsed} / {result.MaxAttempts}";
 
-    resultTitleText.text = allCansKnocked ? "Perfect Smash!" : "Game Over";
-
-    resultDetailText.text =
-        $"Score: {finalScore}\n" +
-        $"Cans: {knockedCount} / {totalCount}\n" +
-        $"Attempts: {attemptsUsed} / {gameStateMachine.MaxAttempts}";
-
-    resultPanel.SetActive(true);
-}
+        resultPanel.SetActive(true);
+    }
 }

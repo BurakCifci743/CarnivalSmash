@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class CanKnockdownDetector : MonoBehaviour
 {
+    public event Action KnockedDown;
+
     [Header("Knockdown Settings")]
     [SerializeField] private float knockdownAngle = 45f;
     [SerializeField] private float heightDropThreshold = 0.12f;
@@ -22,7 +25,7 @@ public class CanKnockdownDetector : MonoBehaviour
 
         if (IsTiltedEnough() || HasDroppedEnough())
         {
-            IsKnockedDown = true;
+            MarkAsKnockedDown();
         }
     }
 
@@ -34,5 +37,11 @@ public class CanKnockdownDetector : MonoBehaviour
     private bool HasDroppedEnough()
     {
         return transform.position.y <= startHeight - heightDropThreshold;
+    }
+
+    private void MarkAsKnockedDown()
+    {
+        IsKnockedDown = true;
+        KnockedDown?.Invoke();
     }
 }
