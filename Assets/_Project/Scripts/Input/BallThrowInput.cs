@@ -9,6 +9,7 @@ public class BallThrowInput : MonoBehaviour
     [SerializeField] private BallThrower ballThrower;
     [SerializeField] private GameStateMachine gameStateMachine;
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private LayerMask aimLayerMask;
 
     [Header("Tap Aim Settings")]
     [SerializeField] private float maxRayDistance = 100f;
@@ -42,7 +43,7 @@ public class BallThrowInput : MonoBehaviour
         Vector2 screenPosition = Pointer.current.position.ReadValue();
         Ray ray = mainCamera.ScreenPointToRay(screenPosition);
 
-        if (!Physics.Raycast(ray, out RaycastHit hit, maxRayDistance)) return;
+        if (!Physics.Raycast(ray, out RaycastHit hit, maxRayDistance, aimLayerMask, QueryTriggerInteraction.Collide)) return;
 
         Vector3 rawTargetPoint = hit.point;
         Vector3 correctedTargetPoint = rawTargetPoint + Vector3.up * verticalAimOffset;

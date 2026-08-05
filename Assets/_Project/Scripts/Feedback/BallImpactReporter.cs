@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(BallThrower))]
 public class BallImpactReporter : MonoBehaviour
 {
     public event Action<Vector3, float> BallImpacted;
@@ -10,18 +10,21 @@ public class BallImpactReporter : MonoBehaviour
     [SerializeField] private BallThrower ballThrower;
 
     [Header("Impact Settings")]
-    [SerializeField] private float minImpactSpeed = 2f;
+    [SerializeField] private LayerMask impactLayerMask;
+    [SerializeField] private float minImpactSpeed = 1.5f;
     [SerializeField] private bool reportOnlyFirstImpact = true;
 
     [Header("Debug")]
     [SerializeField] private bool logImpactDebug;
 
-    private Rigidbody rb;
-    private bool hasReportedImpact;
+    private bool impactReported;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        if (ballThrower == null)
+        {
+            ballThrower = GetComponent<BallThrower>();
+        }
     }
 
     private void OnEnable()
@@ -34,31 +37,41 @@ public class BallImpactReporter : MonoBehaviour
         ballThrower.BallThrown -= ResetImpactReport;
     }
 
-    private void ResetImpactReport()
-    {
-        hasReportedImpact = false;
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
-        if (ballThrower == null) return;
-        if (!ballThrower.HasThrown) return;
+        if (reportOnlyFirstImpact && impactReported) return;
+        if (!IsInImpactLayer(collision.gameObject.layer)) return;
 
-        float impactSpeed = rb.linearVelocity.magnitude;
+        float impactSpeed = collision.relativeVelocity.magnitude;
 
         if (impactSpeed < minImpactSpeed) return;
-        if (reportOnlyFirstImpact && hasReportedImpact) return;
 
-        hasReportedImpact = true;
+        Vector3 impactPoint = transform.position;
 
-        ContactPoint contact = collision.GetContact(0);
+        if (collision.contactCount > 0)
+        {
+            impactPoint = collision.GetContact(0).point;
+        }
 
-        BallImpacted?.Invoke(contact.point, impactSpeed);
+        impactReported = true;
 
-        if (!logImpactDebug) return;
+        if (logImpactDebug)
+        {
+            Debug.Log(
+                $"BALL IMPACT | Object: {collision.collider.name} | Point: {impactPoint:F3} | Speed: {impactSpeed:F2}"
+            );
+        }
 
-        Debug.Log(
-            $"Ball Impact: {contact.point:F3} | Hit Object: {collision.collider.name} | Velocity: {rb.linearVelocity:F3} | Speed: {impactSpeed:F2}"
-        );
+        BallImpacted?.Invoke(impactPoint, impactSpeed);
+    }
+
+    private void ResetImpactReport()
+    {
+        impactReported = false;
+    }
+
+    private bool IsInImpactLayer(int layer)
+    {
+        return (impactLayerMask.value & (1 << layer)) != 0;
     }
 }

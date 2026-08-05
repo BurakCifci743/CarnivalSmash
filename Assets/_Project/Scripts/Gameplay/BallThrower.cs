@@ -22,6 +22,7 @@ public class BallThrower : MonoBehaviour
 
         startPosition = transform.position;
         startRotation = transform.rotation;
+        ResetBall();
     }
 
     public bool ThrowAtTarget(Vector3 targetPoint, float minFlightTime)
