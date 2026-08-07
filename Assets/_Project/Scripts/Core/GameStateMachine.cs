@@ -71,7 +71,6 @@ public class GameStateMachine : MonoBehaviour
         ballThrower.ResetBall();
         SetState(GameState.Playing);
     }
-
     private void SetState(GameState newState)
     {
         if (CurrentState == newState) return;

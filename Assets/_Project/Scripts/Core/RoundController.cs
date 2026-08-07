@@ -52,4 +52,8 @@ public class RoundController : MonoBehaviour
 
         RoundCompleted?.Invoke(knockedCount, totalCount);
     }
+    public void ResetToReady()
+{
+    CurrentState = RoundState.Ready;
+}
 }
