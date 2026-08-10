@@ -8,8 +8,7 @@ public class BallThrower : MonoBehaviour
 
     [Header("Throw Settings")]
     [SerializeField] private float launchSpeed = 17f;
-
-    public bool HasThrown => hasThrown;
+    
 
     private Rigidbody rb;
     private Vector3 startPosition;

@@ -1532,6 +1532,7 @@ MonoBehaviour:
   aimLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  gameResetController: {fileID: 1225398275}
   maxRayDistance: 100
   minFlightTime: 0.3
   verticalAimOffset: 0.1

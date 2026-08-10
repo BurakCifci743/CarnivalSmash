@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+
 
 public class BallThrowInput : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class BallThrowInput : MonoBehaviour
     [SerializeField] private GameStateMachine gameStateMachine;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask aimLayerMask;
+    [SerializeField] private GameResetController gameResetController;
 
     [Header("Tap Aim Settings")]
     [SerializeField] private float maxRayDistance = 100f;
@@ -65,12 +66,12 @@ public class BallThrowInput : MonoBehaviour
     }
 
     private void HandleDebugReset()
-    {
-        if (Keyboard.current == null) return;
+{
+    if (Keyboard.current == null) return;
 
-        if (Keyboard.current.rKey.wasPressedThisFrame)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+    if (Keyboard.current.rKey.wasPressedThisFrame)
+    {
+        gameResetController.ResetScene();
     }
+}
 }
