@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelNumber: 1
   levelName: Level 1
-  layoutType: 3
+  layoutType: 0
   maxAttempts: 3
   horizontalSpacing: 0.3
   verticalSpacing: 0.45

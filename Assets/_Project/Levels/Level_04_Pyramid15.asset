@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18148a5ac8837e94b8a3a435d3703cf8, type: 3}
   m_Name: Level_04_Pyramid15
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelNumber: 1
-  levelName: Level 1
+  levelNumber: 4
+  levelName: Level 4
   layoutType: 3
   maxAttempts: 3
   horizontalSpacing: 0.3

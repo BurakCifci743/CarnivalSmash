@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(-200)]
@@ -11,6 +12,7 @@ public class LevelController : MonoBehaviour
     [SerializeField] private LevelData[] levels;
     [SerializeField] private int startingLevelIndex;
 
+    public event Action<LevelData, int> LevelLoaded;
     public LevelData CurrentLevel { get; private set; }
     public int CurrentLevelIndex { get; private set; }
 
@@ -41,6 +43,8 @@ public class LevelController : MonoBehaviour
 
         gameStateMachine.SetMaxAttempts(CurrentLevel.MaxAttempts);
         canLayoutSpawner.SetLevel(CurrentLevel, true);
+        
+        LevelLoaded?.Invoke(CurrentLevel, CurrentLevelIndex);
     }
 
     public void ReloadCurrentLevel()
