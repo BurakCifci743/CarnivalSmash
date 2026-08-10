@@ -41,6 +41,10 @@ public class GameStateMachine : MonoBehaviour
         SetState(GameState.Playing);
     }
 
+    public void SetMaxAttempts(int value)
+    {
+        maxAttempts = Mathf.Max(1, value);
+    }
     private void HandleBallThrown()
     {
         SetState(GameState.Evaluating);
