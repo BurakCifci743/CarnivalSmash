@@ -8,6 +8,7 @@ public class LevelFlowController : MonoBehaviour
     [SerializeField] private BallThrower ballThrower;
     [SerializeField] private ScoreController scoreController;
     [SerializeField] private ResultPanelView resultPanelView;
+    [SerializeField] private LocalLeaderboardController localLeaderboardController;
 
     public void RetryCurrentLevel()
     {
@@ -17,6 +18,20 @@ public class LevelFlowController : MonoBehaviour
 
     public void LoadNextLevel()
     {
+        if (!levelController.HasNextLevel())
+        {
+            Debug.Log("LevelFlowController: No next level available.");
+            return;
+        }
+
+        int nextLevelIndex = levelController.CurrentLevelIndex + 1;
+
+        if (!localLeaderboardController.IsLevelUnlocked(nextLevelIndex))
+        {
+            Debug.Log("LevelFlowController: Next level is locked.");
+            return;
+        }
+
         bool loadedNextLevel = levelController.TryLoadNextLevel();
 
         if (!loadedNextLevel)

@@ -43,18 +43,6 @@ public class LevelController : MonoBehaviour
         canLayoutSpawner.SetLevel(CurrentLevel, true);
     }
 
-    public bool TryLoadNextLevel()
-    {
-        int nextIndex = CurrentLevelIndex + 1;
-
-        if (nextIndex >= levels.Length)
-        {
-            return false;
-        }
-
-        LoadLevel(nextIndex);
-        return true;
-    }
     public void ReloadCurrentLevel()
     {
         LoadLevel(CurrentLevelIndex);
@@ -63,5 +51,16 @@ public class LevelController : MonoBehaviour
     public bool HasNextLevel()
     {
         return levels != null && CurrentLevelIndex + 1 < levels.Length;
+    }
+
+    public bool TryLoadNextLevel()
+    {
+        if (!HasNextLevel())
+        {
+            return false;
+        }
+
+        LoadLevel(CurrentLevelIndex + 1);
+        return true;
     }
 }
