@@ -55,4 +55,13 @@ public class LevelController : MonoBehaviour
         LoadLevel(nextIndex);
         return true;
     }
+    public void ReloadCurrentLevel()
+    {
+        LoadLevel(CurrentLevelIndex);
+    }
+
+    public bool HasNextLevel()
+    {
+        return levels != null && CurrentLevelIndex + 1 < levels.Length;
+    }
 }

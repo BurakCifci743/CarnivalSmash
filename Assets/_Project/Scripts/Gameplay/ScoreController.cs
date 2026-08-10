@@ -23,7 +23,11 @@ public class ScoreController : MonoBehaviour
     {
         roundController.RoundCompleted -= HandleRoundCompleted;
     }
-
+    public void ResetScore()
+    {
+        CurrentScore = 0;
+        ScoreChanged?.Invoke(CurrentScore);
+    }
     public int CalculateBaseScore(int knockedCount)
     {
         return knockedCount * scorePerCan;
@@ -42,4 +46,5 @@ public class ScoreController : MonoBehaviour
         CurrentScore = CalculateBaseScore(knockedCount);
         ScoreChanged?.Invoke(CurrentScore);
     }
+    
 }

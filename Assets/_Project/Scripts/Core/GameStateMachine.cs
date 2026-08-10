@@ -35,15 +35,22 @@ public class GameStateMachine : MonoBehaviour
 
     private void Start()
     {
-        CurrentAttempt = 1;
-        AttemptChanged?.Invoke(CurrentAttempt, maxAttempts);
-
-        SetState(GameState.Playing);
+        StartNewGame();
     }
 
     public void SetMaxAttempts(int value)
     {
         maxAttempts = Mathf.Max(1, value);
+    }
+
+    public void StartNewGame()
+    {
+        StopAllCoroutines();
+
+        CurrentAttempt = 1;
+        AttemptChanged?.Invoke(CurrentAttempt, maxAttempts);
+
+        SetState(GameState.Playing);
     }
     private void HandleBallThrown()
     {

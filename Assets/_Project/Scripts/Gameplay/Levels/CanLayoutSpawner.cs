@@ -8,6 +8,7 @@ public class CanLayoutSpawner : MonoBehaviour
     [SerializeField] private LevelData levelData;
     [SerializeField] private GameObject canPrefab;
     [SerializeField] private Transform canParent;
+    [SerializeField] private CanGroup canGroup;
 
     [Header("Spawn Settings")]
     [SerializeField] private bool spawnOnAwake = true;
@@ -18,12 +19,18 @@ public class CanLayoutSpawner : MonoBehaviour
 
     private void Awake()
     {
+        if (canParent == null)
+        {
+            canParent = transform;
+        }
+
+        canGroup = canParent.GetComponent<CanGroup>();
+
         if (spawnOnAwake)
         {
             SpawnCurrentLevel();
         }
     }
-
     public void SetLevel(LevelData newLevelData, bool spawnImmediately = true)
     {
         levelData = newLevelData;
@@ -114,6 +121,10 @@ public class CanLayoutSpawner : MonoBehaviour
 
                 canIndex++;
             }
+            if (canGroup != null)
+            {
+                canGroup.RefreshCans();
+            }
         }
 
         Physics.SyncTransforms();
@@ -137,6 +148,7 @@ public class CanLayoutSpawner : MonoBehaviour
         for (int i = canParent.childCount - 1; i >= 0; i--)
         {
             Transform child = canParent.GetChild(i);
+            child.SetParent(null);
 
             if (Application.isPlaying)
             {

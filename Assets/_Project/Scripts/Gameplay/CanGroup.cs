@@ -7,41 +7,65 @@ public class CanGroup : MonoBehaviour
 
     private void Awake()
     {
-        cans = GetComponentsInChildren<CanKnockdownDetector>();
+        RefreshCans();
+    }
+
+    public void RefreshCans()
+    {
+        cans = GetComponentsInChildren<CanKnockdownDetector>(true);
     }
 
     public int GetKnockedDownCount()
     {
-        int count = 0;
-
-        foreach (CanKnockdownDetector can in cans)
+        if (cans == null)
         {
-            if (can.IsKnockedDown)
+            RefreshCans();
+        }
+
+        int knockedDownCount = 0;
+
+        for (int i = 0; i < cans.Length; i++)
+        {
+            if (cans[i] != null && cans[i].IsKnockedDown)
             {
-                count++;
+                knockedDownCount++;
             }
         }
 
-        return count;
+        return knockedDownCount;
     }
 
     public int GetTotalCanCount()
     {
+        if (cans == null)
+        {
+            RefreshCans();
+        }
+
         return cans.Length;
     }
 
     public string GetStandingCanReport()
     {
-        StringBuilder builder = new StringBuilder();
-
-        foreach (CanKnockdownDetector can in cans)
+        if (cans == null)
         {
-            if (!can.IsKnockedDown)
+            RefreshCans();
+        }
+
+        StringBuilder report = new StringBuilder();
+
+        for (int i = 0; i < cans.Length; i++)
+        {
+            if (cans[i] == null) continue;
+
+            if (!cans[i].IsKnockedDown)
             {
-                builder.AppendLine($"{can.name} | Angle: {can.CurrentAngleFromUp:F1}");
+                report.AppendLine(
+                    $"{cans[i].name} | Angle: {cans[i].CurrentAngleFromUp:F1}"
+                );
             }
         }
 
-        return builder.ToString();
+        return report.ToString();
     }
 }

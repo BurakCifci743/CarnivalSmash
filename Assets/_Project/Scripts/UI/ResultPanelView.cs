@@ -66,4 +66,14 @@ public class ResultPanelView : MonoBehaviour
 
         resultPanel.SetActive(true);
     }
+    public void ResetForNewGame()
+    {
+        gameplayHud.SetActive(true);
+        resultPanel.SetActive(false);
+
+        instructionText.text = startInstruction;
+        instructionText.gameObject.SetActive(true);
+
+        UpdateAttemptText(gameStateMachine.CurrentAttempt, gameStateMachine.MaxAttempts);
+    }
 }
