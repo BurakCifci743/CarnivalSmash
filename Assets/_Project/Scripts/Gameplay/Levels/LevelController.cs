@@ -18,9 +18,12 @@ public class LevelController : MonoBehaviour
 
     private void Awake()
     {
-        LoadLevel(startingLevelIndex);
-    }
+        int levelIndex = SelectedLevelStore.HasSelectedLevel
+            ? SelectedLevelStore.SelectedLevelIndex
+            : startingLevelIndex;
 
+        LoadLevel(levelIndex);
+    }
     public void LoadLevel(int levelIndex)
     {
         if (levels == null || levels.Length == 0)
@@ -43,7 +46,7 @@ public class LevelController : MonoBehaviour
 
         gameStateMachine.SetMaxAttempts(CurrentLevel.MaxAttempts);
         canLayoutSpawner.SetLevel(CurrentLevel, true);
-        
+
         LevelLoaded?.Invoke(CurrentLevel, CurrentLevelIndex);
     }
 
