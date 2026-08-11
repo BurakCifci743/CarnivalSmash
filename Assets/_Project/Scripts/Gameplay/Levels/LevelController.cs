@@ -4,26 +4,29 @@ using UnityEngine;
 [DefaultExecutionOrder(-200)]
 public class LevelController : MonoBehaviour
 {
+    public event Action<LevelData, int> LevelLoaded;
+
     [Header("References")]
     [SerializeField] private CanLayoutSpawner canLayoutSpawner;
     [SerializeField] private GameStateMachine gameStateMachine;
 
     [Header("Levels")]
     [SerializeField] private LevelData[] levels;
-    [SerializeField] private int startingLevelIndex;
+    [SerializeField, Min(1)] private int startingLevelNumber = 1;
 
-    public event Action<LevelData, int> LevelLoaded;
     public LevelData CurrentLevel { get; private set; }
     public int CurrentLevelIndex { get; private set; }
+    public int CurrentLevelNumber => CurrentLevelIndex + 1;
 
     private void Awake()
     {
         int levelIndex = SelectedLevelStore.HasSelectedLevel
             ? SelectedLevelStore.SelectedLevelIndex
-            : startingLevelIndex;
+            : startingLevelNumber - 1;
 
         LoadLevel(levelIndex);
     }
+
     public void LoadLevel(int levelIndex)
     {
         if (levels == null || levels.Length == 0)
@@ -69,5 +72,10 @@ public class LevelController : MonoBehaviour
 
         LoadLevel(CurrentLevelIndex + 1);
         return true;
+    }
+
+    private void OnValidate()
+    {
+        startingLevelNumber = Mathf.Max(1, startingLevelNumber);
     }
 }

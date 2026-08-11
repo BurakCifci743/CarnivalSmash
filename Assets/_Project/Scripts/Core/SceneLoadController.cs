@@ -24,10 +24,16 @@ public class SceneLoadController : MonoBehaviour
     }
 
     public void LoadSelectedLevel(int levelIndex)
+{
+    if (!LevelProgressStore.IsLevelUnlocked(levelIndex))
     {
-        SelectedLevelStore.SelectLevel(levelIndex);
-        LoadGame();
+        Debug.Log($"SceneLoadController: Level {levelIndex + 1} is locked.");
+        return;
     }
+
+    SelectedLevelStore.SelectLevel(levelIndex);
+    LoadGame();
+}
 
     public void ReloadCurrentScene()
     {
