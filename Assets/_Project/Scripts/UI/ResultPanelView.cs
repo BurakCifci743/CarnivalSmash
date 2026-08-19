@@ -13,6 +13,7 @@ public class ResultPanelView : MonoBehaviour
     [SerializeField] private TMP_Text attemptText;
     [SerializeField] private TMP_Text resultTitleText;
     [SerializeField] private TMP_Text resultDetailText;
+    [SerializeField] private GameObject nextLevelButton;
 
     [Header("Text")]
     [SerializeField] private string startInstruction = "Tap to shoot";
@@ -56,7 +57,7 @@ public class ResultPanelView : MonoBehaviour
     {
         gameplayHud.SetActive(false);
 
-        resultTitleText.text = result.IsPerfect ? "Perfect Smash!" : "Game Over";
+        resultTitleText.text = result.IsSuccess ? "SUCCESS!" : "FAILED";
 
         resultDetailText.text =
             $"Score: {result.FinalScore}\n" +
@@ -64,7 +65,13 @@ public class ResultPanelView : MonoBehaviour
             $"Cans: {result.KnockedCount} / {result.TotalCount}\n" +
             $"Attempts: {result.AttemptsUsed} / {result.MaxAttempts}";
 
+        if (nextLevelButton != null)
+        {
+            nextLevelButton.SetActive(result.IsSuccess);
+        }
+        
         resultPanel.SetActive(true);
+
     }
     public void ResetForNewGame()
     {

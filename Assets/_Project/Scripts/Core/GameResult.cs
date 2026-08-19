@@ -1,12 +1,11 @@
 public readonly struct GameResult
 {
-    public readonly int KnockedCount;
-    public readonly int TotalCount;
-    public readonly int AttemptsUsed;
-    public readonly int MaxAttempts;
-    public readonly int FinalScore;
-
-    public bool IsPerfect => KnockedCount >= TotalCount;
+    public int KnockedCount { get; }
+    public int TotalCount { get; }
+    public int AttemptsUsed { get; }
+    public int MaxAttempts { get; }
+    public int FinalScore { get; }
+    public bool IsSuccess { get; }
 
     public GameResult(
         int knockedCount,
@@ -20,5 +19,7 @@ public readonly struct GameResult
         AttemptsUsed = attemptsUsed;
         MaxAttempts = maxAttempts;
         FinalScore = finalScore;
+
+        IsSuccess = knockedCount >= totalCount;
     }
 }

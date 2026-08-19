@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - CanTarget
-  - 
+  - BoothArt
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BoothArt
+    uniqueID: 1853640189
     locked: 0
   m_RenderingLayers:
   - Default

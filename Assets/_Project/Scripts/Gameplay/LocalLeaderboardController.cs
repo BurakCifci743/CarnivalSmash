@@ -37,11 +37,11 @@ public class LocalLeaderboardController : MonoBehaviour
             PlayerPrefs.SetInt(GetBestScoreKey(levelIndex), result.FinalScore);
         }
 
-        if (result.IsPerfect)
-        {
-            MarkLevelCompleted(levelIndex);
-            UnlockNextLevel(levelIndex);
-        }
+        if (result.IsSuccess)
+{
+    MarkLevelCompleted(levelIndex);
+    UnlockNextLevel(levelIndex);
+}
 
         PlayerPrefs.Save();
 
